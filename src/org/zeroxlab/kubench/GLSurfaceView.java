@@ -16,7 +16,7 @@
 
 package org.zeroxlab.kubench;
 
-import org.zeroxlab.zeroxbenchmark.Tester;
+import org.zeroxlab.benchmark.Tester;
 
 import android.app.Activity;
 import android.content.Context;

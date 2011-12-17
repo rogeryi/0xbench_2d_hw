@@ -2,7 +2,8 @@ package jnt.scimark2;
 
 import java.util.Properties;
 
-import org.zeroxlab.zeroxbenchmark.TesterScimark2;
+import org.zeroxlab.benchmark.TesterScimark2;
+
 import android.os.Bundle;
 
 /**

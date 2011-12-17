@@ -1,208 +1,263 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest  xmlns:android="http://schemas.android.com/apk/res/android"
-	package="org.zeroxlab.zeroxbenchmark"
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.zeroxlab.benchmark"
     android:versionCode="9"
-    android:versionName="1.1.5"
-    >
+    android:versionName="1.1.5" >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-	<uses-permission android:name="android.permission.INTERNET" />
-	<uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-    android:debuggable="true"
-    android:label="0xBenchmark"
-    android:icon="@drawable/icon"
-    >
-	<activity
-	android:name="Benchmark"
-	android:label="0xBenchmark"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	<category android:name="android.intent.category.LAUNCHER" />
-	</intent-filter>
-	</activity>
+        android:debuggable="true"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/icon"
+        android:label="0xBenchmark" >
+        <activity
+            android:label="0xBenchmark"
+            android:name="Benchmark"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name="ActivitySettings"
             android:screenOrientation="nosensor" >
-            <intent-filter>
-	        <action android:name="android.intent.action.MAIN" />
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </activity>
-
-	<activity
-	android:name="TesterCanvas"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-	<activity
-	android:name="org.zeroxlab.kubench.Kubench"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-	<activity
-	android:name="org.zeroxlab.graphics.DrawCircle"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.zeroxbenchmark.TesterGC"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.zeroxbenchmark.TesterArithmetic"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.zeroxbenchmark.TesterJavascript"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.zeroxbenchmark.TesterScimark2"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.zeroxbenchmark.Report"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.zeroxbenchmark.Upload"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="com.nea.nehe.lesson08.Run"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="com.nea.nehe.lesson16.Run"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.itri.teapot.TeapotES"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.opensolaris.hub.libmicro.NativeTesterMicro"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.byteunix.NativeTesterUbench"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.graphics.DrawRect"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.graphics.DrawArc"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.graphics.DrawText"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.graphics.DrawCircle2"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
-	<activity
-	android:name="org.zeroxlab.graphics.DrawImage"
-	android:screenOrientation="nosensor"
-	>
-	<intent-filter>
-	<action android:name="android.intent.action.MAIN" />
-	</intent-filter>
-	</activity>
-
+        <activity
+            android:name="TesterCanvas"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:hardwareAccelerated="false"
+            android:name=".TesterCanvasSW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.kubench.Kubench"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawCircle"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:hardwareAccelerated="false"
+            android:name="org.zeroxlab.graphics.DrawCircleSW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.benchmark.TesterGC"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.benchmark.TesterArithmetic"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.benchmark.TesterJavascript"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.benchmark.TesterScimark2"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.benchmark.Report"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.benchmark.Upload"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.nea.nehe.lesson08.Run"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.nea.nehe.lesson16.Run"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.itri.teapot.TeapotES"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.opensolaris.hub.libmicro.NativeTesterMicro"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.byteunix.NativeTesterUbench"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawRect"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawRectHW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:hardwareAccelerated="false"
+            android:name="org.zeroxlab.graphics.DrawRectSW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawArc"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawArcHW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:hardwareAccelerated="false"
+            android:name="org.zeroxlab.graphics.DrawArcSW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawText"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawTextHW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:hardwareAccelerated="false"
+            android:name="org.zeroxlab.graphics.DrawTextSW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawCircle2"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawCircle2HW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:hardwareAccelerated="false"
+            android:name="org.zeroxlab.graphics.DrawCircle2SW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawImage"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="org.zeroxlab.graphics.DrawImageHW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:hardwareAccelerated="false"
+            android:name="org.zeroxlab.graphics.DrawImageSW"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
     </application>
-    <uses-sdk android:minSdkVersion="7" />
-</manifest>
 
+    <uses-sdk
+        android:minSdkVersion="11"
+        android:targetSdkVersion="11" />
+
+</manifest>

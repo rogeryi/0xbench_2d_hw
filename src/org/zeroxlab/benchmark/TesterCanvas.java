@@ -14,28 +14,20 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
-
-import android.util.Log;
-
-import android.os.SystemClock;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.*;
-import android.view.*;
-import android.graphics.Canvas;
-import android.os.*;
+package org.zeroxlab.benchmark;
 
 import java.util.Random;
+
+import org.zeroxlab.graphics.BaseDrawView;
+
+import android.content.Context;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.os.Bundle;
 
 public class TesterCanvas extends Tester {
     public final String TAG = "TesterCanvas";
-    public final static String PACKAGE = "org.zeroxlab.zeroxbenchmark";
+    public final static String PACKAGE = "org.zeroxlab.benchmark";
     MyView mView;
 
     public String getTag() {
@@ -58,17 +50,18 @@ public class TesterCanvas extends Tester {
     }
 
     public void oneRound() {
-        mView.postInvalidate();
+        mView.doDraw();
+        decreaseCounter();
     }
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         mView = new MyView(this);
         setContentView(mView);
+        startTester();
     }
 
-    class MyView extends View {
-        int i = 0;
+    public static class MyView extends BaseDrawView {
         Random mRandom;
 
         MyView(Context context) {
@@ -76,22 +69,10 @@ public class TesterCanvas extends Tester {
             mRandom = new Random();
         }
 
-        @Override
-        protected void onWindowVisibilityChanged(int visibility) {
-            super.onWindowVisibilityChanged(visibility);
-            if (visibility != View.VISIBLE) {
-                return;
-            }
-
-            startTester();
-        }
-
-        @Override
-        public void onDraw(Canvas canvas) {
-            super.onDraw(canvas);
+		@Override
+		public void drawScene(Canvas canvas) {
             int r = (0x00151515| mRandom.nextInt() ) | Color.BLACK;
-            canvas.drawRGB(r, r, r);
-            decreaseCounter();
-        }
+            canvas.drawRGB(r, r, r);			
+		}
     }
 }

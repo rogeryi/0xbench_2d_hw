@@ -14,46 +14,34 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
-
-import org.zeroxlab.zeroxbenchmark.MicroBenchmark;
-
-import android.util.Log;
-import android.content.SharedPreferences;
-import android.app.Activity;
-import android.os.Bundle;
-import android.content.Intent;
-
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.Toast;
-import android.view.View;
-
-import android.text.TextWatcher;
-import android.text.Editable;
-
-import android.app.Dialog;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-
-import android.os.SystemClock;
-import android.os.Handler;
-import android.os.Bundle;
-import android.os.Message;
+package org.zeroxlab.benchmark;
 
 import java.util.HashSet;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.view.View;
+import android.webkit.JsResult;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.webkit.WebChromeClient;
-import android.webkit.JsResult;
-import android.graphics.Bitmap;
-import android.content.pm.PackageManager;
-import android.content.pm.PackageInfo;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
 
 
 public class Upload extends Activity implements View.OnClickListener {
@@ -187,7 +175,7 @@ public class Upload extends Activity implements View.OnClickListener {
             int versionCode = 0;
             int flag = 0;
             try {
-                PackageInfo pinfo = getPackageManager().getPackageInfo("org.zeroxlab.zeroxbenchmark", flag);
+                PackageInfo pinfo = getPackageManager().getPackageInfo("org.zeroxlab.benchmark", flag);
                 versionCode = pinfo.versionCode;
                 versionName = pinfo.versionName;
             }
@@ -365,11 +353,11 @@ public class Upload extends Activity implements View.OnClickListener {
     }
 
     public static String fullClassName() {
-        return "org.zeroxlab.zeroxbenchmark.Upload";
+        return "org.zeroxlab.benchmark.Upload";
     }
 
     public static String packageName() {
-        return "org.zeroxlab.zeroxbenchmark";
+        return "org.zeroxlab.benchmark";
     }
 
 }

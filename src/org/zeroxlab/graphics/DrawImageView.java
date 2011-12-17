@@ -16,33 +16,19 @@
 
 package org.zeroxlab.graphics;
 
-import org.zeroxlab.zeroxbenchmark.R;
+import org.zeroxlab.benchmark.Case;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.Color;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.AttributeSet;
-import android.view.KeyEvent;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-import android.view.View;
-import android.widget.TextView;
-
-import android.util.Log;
-
-import java.util.ArrayList;
-import java.util.Random;
 
 
 class DrawImageView extends SurfaceView {
@@ -62,12 +48,16 @@ class DrawImageView extends SurfaceView {
     }
 
     protected void doDraw() {
-        Canvas canvas = mSurfaceHolder.lockCanvas();
+        Canvas canvas = mSurfaceHolder.lockCanvas();  	
         drawImage(canvas);
         mSurfaceHolder.unlockCanvasAndPost(canvas);
     }
 
     private void drawImage(Canvas canvas) {
+    	Log.d("G", "Case " + Case.getSource(((Activity)getContext()).getIntent()) 
+    			+ ", canvas " + canvas.toString() + " HW Acc : " + canvas.isHardwareAccelerated()
+    			+ ", layer : " + getLayerType() + "(0:None, 1:SW, 2:HW)");
+    	
         int w = getWidth();
         int h = getHeight();
         canvas.drawRect(0,0,w,h,bgPaint);

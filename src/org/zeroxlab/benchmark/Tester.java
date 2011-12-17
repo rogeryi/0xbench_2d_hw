@@ -14,25 +14,17 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
-
-import android.util.Log;
-
-import android.os.SystemClock;
+package org.zeroxlab.benchmark;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.*;
-import android.view.*;
-import android.graphics.Canvas;
-import android.os.*;
+import android.os.SystemClock;
+import android.view.MotionEvent;
 
 public abstract class Tester extends Activity {
-    private String TAG;
-    public final static String PACKAGE = "org.zeroxlab.zeroxbenchmark";
+	public String TAG;
+    public final static String PACKAGE = "org.zeroxlab.benchmark";
     int mRound;
     int mNow;
     int mIndex;
@@ -64,7 +56,8 @@ public abstract class Tester extends Activity {
             mRound = 80;
             mIndex = -1;
         }
-        mNow   = mRound;
+        mNow = mRound;
+        setTitle(getTitle() + " - " + Case.getSource(intent));
     }
 
     @Override

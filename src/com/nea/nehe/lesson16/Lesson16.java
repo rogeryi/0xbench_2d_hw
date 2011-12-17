@@ -15,7 +15,7 @@
 
 package com.nea.nehe.lesson16;
 
-import org.zeroxlab.zeroxbenchmark.Tester;
+import org.zeroxlab.benchmark.Tester;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

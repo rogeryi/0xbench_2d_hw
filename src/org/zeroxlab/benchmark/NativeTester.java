@@ -15,33 +15,25 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
+package org.zeroxlab.benchmark;
 
-import java.lang.Runtime;
-import java.lang.IllegalThreadStateException;
-
-import java.io.InputStreamReader;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.lang.Math;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-
-import java.net.Socket;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import android.app.Activity;
-import android.util.Log;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.os.Handler;
 import android.os.Message;
-import android.content.Intent;
-import android.widget.TextView;
+import android.os.SystemClock;
+import android.util.Log;
 import android.widget.ScrollView;
-
-import android.content.pm.ActivityInfo;
+import android.widget.TextView;
 
 
 public abstract class NativeTester extends Tester {

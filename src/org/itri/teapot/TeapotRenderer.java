@@ -18,7 +18,7 @@
 
 package org.itri.teapot;
 
-import org.zeroxlab.zeroxbenchmark.Tester;
+import org.zeroxlab.benchmark.Tester;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

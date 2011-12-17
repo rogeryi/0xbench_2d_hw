@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
-
-import android.util.Log;
+package org.zeroxlab.benchmark;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Button;
-import android.content.*;
-import java.nio.*;
-
-import java.util.LinkedList;
+import android.widget.TextView;
 
 /* Construct a basic UI */
 public class Report extends Activity implements View.OnClickListener {
@@ -91,10 +86,10 @@ public class Report extends Activity implements View.OnClickListener {
     }
 
     public static String fullClassName() {
-        return "org.zeroxlab.zeroxbenchmark.Report";
+        return "org.zeroxlab.benchmark.Report";
     }
 
     public static String packageName() {
-        return "org.zeroxlab.zeroxbenchmark";
+        return "org.zeroxlab.benchmark";
     }
 }

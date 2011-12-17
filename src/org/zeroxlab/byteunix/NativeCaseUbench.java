@@ -19,7 +19,6 @@
 
 package org.zeroxlab.byteunix;
 
-import org.zeroxlab.zeroxbenchmark.*;
 
 import android.util.Log;
 
@@ -33,6 +32,7 @@ import android.os.Bundle;
 
 import java.util.ArrayList;
 
+import org.zeroxlab.benchmark.*;
 import org.zeroxlab.byteunix.NativeTesterUbench;
 
 public class NativeCaseUbench  extends Case {

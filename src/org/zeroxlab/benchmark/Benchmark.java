@@ -17,12 +17,30 @@
  *             Joseph Chang (bizkit) <bizkit@0xlab.org>
  */
 
-package org.zeroxlab.zeroxbenchmark;
+package org.zeroxlab.benchmark;
 
-import android.util.Log;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import android.app.Activity;
-import android.app.ActivityManager;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.opensolaris.hub.libmicro.NativeCaseMicro;
+import org.zeroxlab.byteunix.NativeCaseUbench;
+import org.zeroxlab.utils.BenchUtil;
+
 import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Context;
@@ -30,12 +48,12 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -54,34 +72,11 @@ import android.widget.TabHost;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.StringBuffer;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.UUID;
-
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.opensolaris.hub.libmicro.NativeCaseMicro;
-import org.zeroxlab.byteunix.NativeCaseUbench;;
-import org.zeroxlab.utils.BenchUtil;
-
 /* Construct a basic UI */
 public class Benchmark extends TabActivity implements View.OnClickListener {
 
     public final static String TAG     = "Benchmark";
-    public final static String PACKAGE = "org.zeroxlab.zeroxbenchmark";
+    public final static String PACKAGE = "org.zeroxlab.benchmark";
 
     private final static String mOutputFile = "0xBenchmark";
 
@@ -111,7 +106,10 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
     private WakeLock mWakeLock;
 
     private final String MAIN = "Main";
-    private final String D2 = "2D";
+    private final String D2 = "2D(SV)";
+    private final String D2HW = "2D(HW)";
+    private final String D2SW1 = "2D(SW1)";
+    private final String D2SW2 = "2D(SW2)";
     private final String D3 = "3D";
     private final String MATH = "Math";
     private final String VM = "VM";
@@ -119,6 +117,9 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
     private final String MISC = "Misc";
 
     private CheckBox d2CheckBox;
+    private CheckBox d2HWCheckBox;
+    private CheckBox d2SW1CheckBox;
+    private CheckBox d2SW2CheckBox;
     private CheckBox d3CheckBox;
     private CheckBox mathCheckBox;
     private CheckBox vmCheckBox;
@@ -157,9 +158,7 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         Case arith  = new CaseArithmetic();
         Case javascript = new CaseJavascript();
         Case scimark2  = new CaseScimark2();
-        Case canvas = new CaseCanvas();
         Case glcube = new CaseGLCube();
-        Case circle = new CaseDrawCircle();
         Case nehe08 = new CaseNeheLesson08();
         Case nehe16 = new CaseNeheLesson16();
         Case teapot = new CaseTeapot();
@@ -172,8 +171,11 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         Case da = new CaseDrawArc();
         Case di = new CaseDrawImage();
         Case dt = new CaseDrawText();
-
+        
         mCategory.put(D2, new HashSet<Case>());
+        mCategory.put(D2HW, new HashSet<Case>());
+        mCategory.put(D2SW1, new HashSet<Case>());
+        mCategory.put(D2SW2, new HashSet<Case>());
         mCategory.put(D3, new HashSet<Case>());
         mCategory.put(MATH, new HashSet<Case>());
         mCategory.put(VM, new HashSet<Case>());
@@ -189,22 +191,91 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         mCategory.get(MISC).add(javascript);
 
         // 2d
-        mCases.add(canvas);
-        mCases.add(circle);
         mCases.add(dc2);
         mCases.add(dr);
         mCases.add(da);
         mCases.add(di);
         mCases.add(dt);
 
-        mCategory.get(D2).add(canvas);
-        mCategory.get(D2).add(circle);
         mCategory.get(D2).add(dc2);
         mCategory.get(D2).add(dr);
         mCategory.get(D2).add(da);
         mCategory.get(D2).add(di);
-        mCategory.get(D2).add(dt);
-
+        mCategory.get(D2).add(dt);       
+        
+        Case canvas = new CaseCanvas(false, false, false);//HW
+        Case canvas2 = new CaseCanvas(false, true, false);//SW Window
+        Case canvas3 = new CaseCanvas(false, false, true);//SW Layer
+        Case circle = new CaseDrawCircle(false, false, false);//HW
+        Case circle2 = new CaseDrawCircle(false, true, false);//SW Window
+        Case circle3 = new CaseDrawCircle(false, false, true);//SW Layer
+        Case dc22 = new CaseDrawCircle2(false, false, false);//HW
+        Case dc23 = new CaseDrawCircle2(false, true, false);//SW Window
+        Case dc24 = new CaseDrawCircle2(false, false, true);//SW Layer
+        Case dr2 = new CaseDrawRect(false, false, false);//HW
+        Case dr3 = new CaseDrawRect(false, true, false);//SW Window
+        Case dr4 = new CaseDrawRect(false, false, true);//SW Layer
+        Case da2 = new CaseDrawArc(false, false, false);//HW
+        Case da3 = new CaseDrawArc(false, true, false);//SW Window
+        Case da4 = new CaseDrawArc(false, false, true);//SW Layer
+        Case di2 = new CaseDrawImage(false, false, false);//HW
+        Case di3 = new CaseDrawImage(false, true, false);//SW Window
+        Case di4 = new CaseDrawImage(false, false, true);//SW Layer
+        Case dt2 = new CaseDrawText(false, false, false);//HW
+        Case dt3 = new CaseDrawText(false, true, false);//SW Window
+        Case dt4 = new CaseDrawText(false, false, true);//SW Layer
+        
+        mCases.add(canvas);
+        mCases.add(circle);
+        mCases.add(dc22);
+        mCases.add(dr2);
+        mCases.add(da2);
+        mCases.add(di2);
+        mCases.add(dt2);
+        
+        mCases.add(canvas2);
+        mCases.add(circle2);
+        mCases.add(dc23);
+        mCases.add(dr3);
+        mCases.add(da3);
+        mCases.add(di3);
+        mCases.add(dt3);
+        
+        mCases.add(canvas3);
+        mCases.add(circle3);
+        mCases.add(dc24);
+        mCases.add(dr4);
+        mCases.add(da4);
+        mCases.add(di4);
+        mCases.add(dt4);
+        
+        //2d(HW)
+        mCategory.get(D2HW).add(canvas);
+        mCategory.get(D2HW).add(circle);
+        mCategory.get(D2HW).add(dc22);
+        mCategory.get(D2HW).add(da2);
+        mCategory.get(D2HW).add(dr2);
+        mCategory.get(D2HW).add(di2);
+        mCategory.get(D2HW).add(dt2);
+        
+        //2d(SW1)
+        mCategory.get(D2SW1).add(canvas2);
+        mCategory.get(D2SW1).add(circle2);
+        mCategory.get(D2SW1).add(dc23);
+        mCategory.get(D2SW1).add(da3);
+        mCategory.get(D2SW1).add(dr3);
+        mCategory.get(D2SW1).add(di3);
+        mCategory.get(D2SW1).add(dt3);
+        
+        //2d(SW2)
+        mCategory.get(D2SW2).add(canvas3);
+        mCategory.get(D2SW2).add(circle3);
+        mCategory.get(D2SW2).add(dc24);
+        mCategory.get(D2SW2).add(da4);
+        mCategory.get(D2SW2).add(dr4);
+        mCategory.get(D2SW2).add(di4);
+        mCategory.get(D2SW2).add(dt4);
+        
         // 3d
         mCases.add(glcube);
         mCases.add(nehe08);
@@ -287,7 +358,7 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem menu) {
         if (menu.getGroupId() == GROUP_DEFAULT && menu.getItemId() == SETTINGS_ID) {
-            org.zeroxlab.utils.Util.launchActivity(this, "org.zeroxlab.zeroxbenchmark.ActivitySettings");
+            org.zeroxlab.utils.Util.launchActivity(this, "org.zeroxlab.benchmark.ActivitySettings");
         }
         return true;
     }
@@ -345,7 +416,8 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
             mCheckList[i].setChecked(check);
     }
 
-    private void initAuto() {
+    @SuppressWarnings("unused")
+	private void initAuto() {
         Intent intent = getIntent();
         String TAG = intent.getStringExtra("TAG");
         String CAT = intent.getStringExtra("CAT");
@@ -365,7 +437,9 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
             }
     };
     
-    final ProgressDialog dialog = new ProgressDialog(this).show(this, "Starting Benchmark", "Please wait...", true, false);
+    final ProgressDialog dialog = ProgressDialog.show(
+    		this, "Starting Benchmark", "Please wait...", true, false);
+    
     new Thread() {
             public void run() {
                 SystemClock.sleep(1000);
@@ -433,7 +507,19 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
                     d2CheckBox = new CheckBox(Benchmark.this);
                     d2CheckBox.setText(D2);
                     d2CheckBox.setOnClickListener(Benchmark.this);
-
+                    
+                    d2HWCheckBox = new CheckBox(Benchmark.this);
+                    d2HWCheckBox.setText(D2HW);
+                    d2HWCheckBox.setOnClickListener(Benchmark.this);
+                    
+                    d2SW1CheckBox = new CheckBox(Benchmark.this);
+                    d2SW1CheckBox.setText(D2SW1);
+                    d2SW1CheckBox.setOnClickListener(Benchmark.this);
+                    
+                    d2SW2CheckBox = new CheckBox(Benchmark.this);
+                    d2SW2CheckBox.setText(D2SW2);
+                    d2SW2CheckBox.setOnClickListener(Benchmark.this);
+                    
                     d3CheckBox = new CheckBox(Benchmark.this);
                     d3CheckBox.setText(D3);
                     d3CheckBox.setOnClickListener(Benchmark.this);
@@ -482,6 +568,9 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
                     mMainViewContainer.addView(mBannerInfo);
                     mMainViewContainer.addView(mathCheckBox);
                     mMainViewContainer.addView(d2CheckBox);
+                    mMainViewContainer.addView(d2HWCheckBox);
+                    mMainViewContainer.addView(d2SW1CheckBox);
+                    mMainViewContainer.addView(d2SW2CheckBox);
                     mMainViewContainer.addView(d3CheckBox);
                     mMainViewContainer.addView(vmCheckBox);
                     mMainViewContainer.addView(nativeCheckBox);
@@ -527,6 +616,9 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
 
         mTabHost.addTab(mTabHost.newTabSpec(MAIN).setIndicator(MAIN, getResources().getDrawable(R.drawable.ic_eye)).setContent(mTCF));
         mTabHost.addTab(mTabHost.newTabSpec(D2).setIndicator(D2, getResources().getDrawable(R.drawable.ic_2d)).setContent(mTCF));
+        mTabHost.addTab(mTabHost.newTabSpec(D2HW).setIndicator(D2HW, getResources().getDrawable(R.drawable.ic_2d)).setContent(mTCF));
+        mTabHost.addTab(mTabHost.newTabSpec(D2SW1).setIndicator(D2SW1, getResources().getDrawable(R.drawable.ic_2d)).setContent(mTCF));
+        mTabHost.addTab(mTabHost.newTabSpec(D2SW2).setIndicator(D2SW2, getResources().getDrawable(R.drawable.ic_2d)).setContent(mTCF));
         mTabHost.addTab(mTabHost.newTabSpec(D3).setIndicator(D3, getResources().getDrawable(R.drawable.ic_3d)).setContent(mTCF));
         mTabHost.addTab(mTabHost.newTabSpec(MATH).setIndicator(MATH, getResources().getDrawable(R.drawable.ic_pi)).setContent(mTCF));
         mTabHost.addTab(mTabHost.newTabSpec(VM).setIndicator(VM, getResources().getDrawable(R.drawable.ic_vm)).setContent(mTCF));
@@ -560,8 +652,10 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
             }
             intent.setClassName(Report.packageName(), Report.fullClassName());
             startActivity(intent);
-        } else if (v == d2CheckBox || v == d3CheckBox || v == mathCheckBox ||
-                   v == vmCheckBox || v == nativeCheckBox || v == miscCheckBox) {
+        } else if (v == d2CheckBox || v == d2HWCheckBox || 
+        		v == d2SW1CheckBox || v == d2SW2CheckBox ||
+        		v == d3CheckBox || v == mathCheckBox || 
+        		v == vmCheckBox || v == nativeCheckBox || v == miscCheckBox) {
             int length = mCases.size();
             String tag = ((CheckBox)v).getText().toString();
             for (int i = 0; i < length; i++) {
@@ -588,7 +682,9 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
             String result = getResult();
             writeResult(mOutputFile, result);
 
-            final ProgressDialog dialogGetXml = new ProgressDialog(this).show(this, "Generating XML Report", "Please wait...", true, false);
+            final ProgressDialog dialogGetXml = ProgressDialog.show(
+            		this, "Generating XML Report", "Please wait...", true, false);
+            
             new Thread() {
                 public void run() {
                     mJSONResult = getJSONResult();

@@ -16,20 +16,10 @@
 
 package org.zeroxlab.graphics;
 
-import org.zeroxlab.zeroxbenchmark.R;
-
-import org.zeroxlab.zeroxbenchmark.Tester;
-
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import org.zeroxlab.benchmark.R;
+import org.zeroxlab.benchmark.Tester;
 
 import android.os.Bundle;
-import android.view.View;
-
-import org.zeroxlab.graphics.DrawArcView;
 
 public class DrawArc extends Tester {
     /** Called when the activity is first created. */

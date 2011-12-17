@@ -14,27 +14,16 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
-
-import android.util.Log;
-
-import android.os.SystemClock;
-
-import org.zeroxlab.zeroxbenchmark.Scenario;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.*;
-import android.view.*;
-import java.nio.*;
+package org.zeroxlab.benchmark;
 
 import java.util.ArrayList;
-import org.json.JSONObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Intent;
+import android.util.Log;
 
 public abstract class Case {
     protected String TAG = "Case";
@@ -48,11 +37,17 @@ public abstract class Case {
     protected boolean mInvolved;
     protected long[] mResult;
 
-    private final static String SOURCE = "SOURCE";
-    private final static String INDEX  = "INDEX";
-    private final static String RESULT = "RESULT";
-    private final static String ROUND  = "ROUND";
+    private final static String SOURCE 	= "SOURCE";
+    private final static String INDEX  	= "INDEX";
+    private final static String RESULT 	= "RESULT";
+    private final static String ROUND  	= "ROUND";
+    private final static String SWWINDOW  = "SWWINDOW";
+    private final static String SWLAYER  	= "SWLAYER";
+
     protected int mCaseRound = 30;
+    protected boolean mUseSV = true;
+    protected boolean mSwWin = false;
+    protected boolean mSwLayer = false;
 
     public String mType = "";
     public String[] mTags = {};
@@ -67,10 +62,16 @@ public abstract class Case {
      * @param round To tell tester to run itself as *round* round.
      */
     protected Case(String tag, String tester, int repeat, int round) {
+        this(tag, tester, repeat, round, false, false);
+    }
+    
+    protected Case(String tag, String tester, int repeat, int round, boolean swWin, boolean swLayer) {
         TAG    = tag;
         TESTER = tester;
         mRepeatMax = repeat;
         mCaseRound = round;
+        mSwWin = swWin;
+        mSwLayer = swLayer;
         reset();
     }
 
@@ -84,6 +85,14 @@ public abstract class Case {
         intent.putExtra(ROUND, round);
     }
 
+    public final static void putSwWindow(Intent intent, boolean swWin) {
+        intent.putExtra(SWWINDOW, swWin);
+    }
+    
+    public final static void putSwLayer(Intent intent, boolean swLayer) {
+        intent.putExtra(SWLAYER, swLayer);
+    }
+    
     public final static void putIndex(Intent intent, int index) {
         intent.putExtra(INDEX, index);
     }
@@ -98,6 +107,14 @@ public abstract class Case {
 
     public final static int getRound(Intent intent) {
         return intent.getIntExtra(ROUND, 100);
+    }
+    
+    public final static boolean isSoftwareWindow(Intent intent) {
+        return intent.getBooleanExtra(SWWINDOW, false);
+    }
+    
+    public final static boolean isSoftwareLayer(Intent intent) {
+        return intent.getBooleanExtra(SWLAYER, false);
     }
 
     public final static int getIndex(Intent intent) {
@@ -121,6 +138,25 @@ public abstract class Case {
         long defaultResult = -1;
         return intent.getLongExtra(RESULT, defaultResult);
     }
+    
+	public final static String decorate(String prefix, boolean useSurfaceView,
+			boolean swWindow, boolean swLayer) {
+
+		if (useSurfaceView)
+			return prefix;
+
+		if (swWindow) {
+			if (swLayer)
+				return prefix + "(SW-WL)";
+			else
+				return prefix + "(SW-W)";
+		} else {
+			if (swLayer)
+				return prefix + "(SW-L)";
+			else
+				return prefix + "(HW)";
+		}
+	}
 
     public String getTag() {
         return TAG;
@@ -135,6 +171,8 @@ public abstract class Case {
         Intent intent = new Intent();
         intent.setClassName(PACKAGE, TESTER);
         Case.putRound(intent, mCaseRound);
+        Case.putSwWindow(intent, mSwWin);
+        Case.putSwLayer(intent, mSwLayer);
         Case.putSource(intent, TAG);
         Case.putIndex(intent, mRepeatNow);
 

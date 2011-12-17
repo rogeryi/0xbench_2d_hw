@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
+package org.zeroxlab.benchmark;
 
 import java.io.InputStreamReader;
 import java.io.OutputStream;

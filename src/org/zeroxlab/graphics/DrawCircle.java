@@ -16,16 +16,13 @@
 
 package org.zeroxlab.graphics;
 
-import org.zeroxlab.zeroxbenchmark.Tester;
+import org.zeroxlab.benchmark.Tester;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-
 import android.os.Bundle;
-import android.view.View;
 
 public class DrawCircle extends Tester {
     /** Called when the activity is first created. */
@@ -45,7 +42,8 @@ public class DrawCircle extends Tester {
     }
 
     public void oneRound() {
-        mView.postInvalidate();
+        mView.doDraw();
+        decreaseCounter();
     }
 
     @Override
@@ -53,9 +51,10 @@ public class DrawCircle extends Tester {
         super.onCreate(savedInstanceState);
         mView = new SampleView(this);
         setContentView(mView);
+        startTester();
     }
 
-    private class SampleView extends View {
+    private class SampleView extends BaseDrawView {
         private Paint[] mPaints;
         private Paint mFramePaint;
 
@@ -96,18 +95,8 @@ public class DrawCircle extends Tester {
             mFramePaint.setStrokeWidth(0);
         }
 
-        @Override
-        protected void onWindowVisibilityChanged(int visibility) {
-            super.onWindowVisibilityChanged(visibility);
-            if (visibility != View.VISIBLE) {
-                return;
-            }
-
-            startTester();
-        }
-
-        @Override
-        protected void onDraw(Canvas canvas) {
+		@Override
+		public void drawScene(Canvas canvas) {
             canvas.drawColor(Color.WHITE);
 
             canvas.drawCircle(160f, 150f, 120f, mPaints[mBigIndex]);
@@ -129,10 +118,7 @@ public class DrawCircle extends Tester {
                 last = current;
                 current = System.currentTimeMillis();
 
-            }
-
-            invalidate();
-            decreaseCounter();
-        }
+            }			
+		}
     }
 }

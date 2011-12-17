@@ -16,31 +16,21 @@
  * Authored by Julian Chu <walkingice@0xlab.org>
  */
 
-package org.zeroxlab.zeroxbenchmark;
+package org.zeroxlab.benchmark;
 
-import android.util.Log;
+import org.zeroxlab.utils.BenchUtil;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.Message;
-import android.view.MotionEvent;
+import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.ScrollView;
 import android.widget.TextView;
-
-import org.zeroxlab.utils.BenchUtil;
 
 public class ActivitySettings extends Activity implements View.OnClickListener {
 

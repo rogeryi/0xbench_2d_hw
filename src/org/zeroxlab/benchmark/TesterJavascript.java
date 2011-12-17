@@ -16,14 +16,12 @@
  * Authored by Julian Chu <walkingice@0xlab.org>
  */
 
-package org.zeroxlab.zeroxbenchmark;
+package org.zeroxlab.benchmark;
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.os.Message;
 import android.content.Intent;
-import android.webkit.WebView;
+import android.os.Bundle;
 import android.webkit.WebSettings;
+import android.webkit.WebView;
 
 public class TesterJavascript extends Tester {
 

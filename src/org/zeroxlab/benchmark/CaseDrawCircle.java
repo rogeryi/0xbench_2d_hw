@@ -14,95 +14,88 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
+package org.zeroxlab.benchmark;
 
-import android.util.Log;
-
-import android.os.SystemClock;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.*;
-import android.view.*;
-import java.nio.*;
 import java.util.ArrayList;
 
 public class CaseDrawCircle extends Case {
 
-    public static int CircleRound = 300;
+	public static int CircleRound = 300;
 
-    CaseDrawCircle() {
-        super("CaseDrawCircle", "org.zeroxlab.graphics.DrawCircle", 3, CircleRound);
-        mType = "2d-fps";
-        String [] _tmp = {
-            "2d",
-            "render",
-            "skia",
-            "view",
-        };
-        mTags = _tmp;
-    }
+	CaseDrawCircle() {
+		this(true, false, false);
+	}
 
-    public String getTitle() {
-        return "Draw Circle";
-    }
+	CaseDrawCircle(boolean useSurfaceView, boolean swWin, boolean swLayer) {
+		super(decorate("CaseDrawCircle", useSurfaceView, swWin, swLayer),
+				swWin ? "org.zeroxlab.graphics.DrawCircleSW"
+						: "org.zeroxlab.graphics.DrawCircle", 2, CircleRound,
+				swWin, swLayer);
 
-    public String getDescription() {
-        return "call canvas.drawCircle to draw circle for " + CircleRound + " times";
-    }
+		mUseSV = useSurfaceView;
+		mType = "2d-fps";
+		String[] _tmp = { "2d", "render", "skia", "view", };
+		mTags = _tmp;
+	}
 
-    @Override
-    public String getResultOutput() {
-        if (!couldFetchReport()) {
-            return "DrawCircle has no report";
-        }
+	public String getTitle() {
+		return decorate("Draw Circle", mUseSV, mSwWin, mSwLayer);
+	}
 
-        String result = "";
-        float total = 0;
-        int length = mResult.length;
+	public String getDescription() {
+		return "call canvas.drawCircle to draw circle for " + CircleRound
+				+ " times";
+	}
 
-        for (int i = 0; i < length; i++) {
-            float second = (mResult[i] / 1000f);
-            float fps = (float)mCaseRound / second; // milliseconds to seconds
-            result += "Round " + i +": fps = " + fps + "\n";
-            total  += fps;
-        }
+	@Override
+	public String getResultOutput() {
+		if (!couldFetchReport()) {
+			return "DrawCircle has no report";
+		}
 
-        result += "Average: fps = " + ((float)total/length) + "\n";
-        return result;
-    }
+		String result = "";
+		float total = 0;
+		int length = mResult.length;
 
-    /*
-     *  Get Average Benchmark
-     */
-    public double getBenchmark(Scenario s) {
-        double total = 0;
-        int length = mResult.length;
-        for (int i = 0; i < length; i++) {
-            double second = (mResult[i] / 1000f);
-            double fps = (double)mCaseRound / second;
-            total  += fps;
-        }
-        return total / length;
-    }
+		for (int i = 0; i < length; i++) {
+			float second = (mResult[i] / 1000f);
+			float fps = (float) mCaseRound / second; // milliseconds to seconds
+			result += "Round " + i + ": fps = " + fps + "\n";
+			total += fps;
+		}
 
-    @Override
-    public ArrayList<Scenario> getScenarios () {
-        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+		result += "Average: fps = " + ((float) total / length) + "\n";
+		return result;
+	}
 
-        Scenario s = new Scenario(getTitle(), mType, mTags);
-        s.mLog = getResultOutput();
-        for (int i = 0; i < mResult.length; i++) {
-            float second = (mResult[i] / 1000f);
-            float fps = (float)mCaseRound / second;
-            s.mResults.add(((Float)fps).doubleValue());
-        }
+	/*
+	 * Get Average Benchmark
+	 */
+	public double getBenchmark(Scenario s) {
+		double total = 0;
+		int length = mResult.length;
+		for (int i = 0; i < length; i++) {
+			double second = (mResult[i] / 1000f);
+			double fps = (double) mCaseRound / second;
+			total += fps;
+		}
+		return total / length;
+	}
 
-        scenarios.add(s);
-        return scenarios;
-    }
+	@Override
+	public ArrayList<Scenario> getScenarios() {
+		ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+
+		Scenario s = new Scenario(getTitle(), mType, mTags);
+		s.mLog = getResultOutput();
+		for (int i = 0; i < mResult.length; i++) {
+			float second = (mResult[i] / 1000f);
+			float fps = (float) mCaseRound / second;
+			s.mResults.add(((Float) fps).doubleValue());
+		}
+
+		scenarios.add(s);
+		return scenarios;
+	}
 
 }

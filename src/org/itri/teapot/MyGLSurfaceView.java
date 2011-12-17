@@ -18,7 +18,7 @@
 
 package org.itri.teapot;
 
-import org.zeroxlab.zeroxbenchmark.Tester;
+import org.zeroxlab.benchmark.Tester;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;

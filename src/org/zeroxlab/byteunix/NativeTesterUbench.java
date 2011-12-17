@@ -19,7 +19,7 @@
 
 package org.zeroxlab.byteunix;
 
-import org.zeroxlab.zeroxbenchmark.*;
+import org.zeroxlab.benchmark.*;
 
 import android.os.Bundle;
 import android.content.Intent;

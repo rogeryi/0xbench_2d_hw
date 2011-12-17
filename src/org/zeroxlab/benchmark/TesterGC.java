@@ -14,16 +14,14 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
+package org.zeroxlab.benchmark;
 
 import org.zeroxlab.gc.GCBenchmark;
 
-import android.app.Activity;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.content.Intent;
 import android.widget.TextView;
 
 public class TesterGC extends Tester {

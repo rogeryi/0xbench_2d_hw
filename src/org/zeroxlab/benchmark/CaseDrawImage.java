@@ -14,20 +14,8 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
+package org.zeroxlab.benchmark;
 
-import android.util.Log;
-
-import android.os.SystemClock;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.*;
-import android.view.*;
-import java.nio.*;
 import java.util.ArrayList;
 
 public class CaseDrawImage extends Case {
@@ -35,19 +23,29 @@ public class CaseDrawImage extends Case {
     public static int ImageRound = 500;
 
     CaseDrawImage() {
-        super("CaseDrawImage", "org.zeroxlab.graphics.DrawImage", 2, ImageRound);
-        mType = "2d-fps";
-        String [] _tmp = {
-            "2d",
-            "render",
-            "skia",
-            "view",
-        };
-        mTags = _tmp;
+    	this(true, false, false);
     }
+    
+	CaseDrawImage(boolean useSurfaceView, boolean swWin, boolean swLayer) {
+		super(decorate("CaseDrawImage", useSurfaceView, swWin, swLayer),
+				getClass(useSurfaceView, swWin), 2, ImageRound, swWin, swLayer);
 
+		mUseSV = useSurfaceView;
+		mType = "2d-fps";
+		String[] _tmp = { "2d", "render", "skia", "view", };
+		mTags = _tmp;
+	}
+
+    private static String getClass(boolean useSurfaceView, boolean swWin) {
+    	if (useSurfaceView)
+    		return "org.zeroxlab.graphics.DrawImage";
+    	if (swWin)
+    		return "org.zeroxlab.graphics.DrawImageSW";
+		return "org.zeroxlab.graphics.DrawImageHW";		
+    }
+    
     public String getTitle() {
-        return "Draw Image";
+        return decorate("Draw Image", mUseSV, mSwWin, mSwLayer);
     }
 
     public String getDescription() {

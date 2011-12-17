@@ -14,28 +14,23 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
+package org.zeroxlab.benchmark;
 
-import android.util.Log;
-
-import android.os.SystemClock;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.*;
-import android.view.*;
-import java.nio.*;
 import java.util.ArrayList;
 
-public class CaseDrawArc extends Case{
+public class CaseDrawArc extends Case {
 
     public static int ArcRound = 500;
 
     CaseDrawArc() {
-        super("CaseDrawArc", "org.zeroxlab.graphics.DrawArc", 2, ArcRound);
+    	this(true, false, false);
+    }
+	
+    CaseDrawArc(boolean useSurfaceView, boolean swWin, boolean swLayer) {
+		super(decorate("CaseDrawArc", useSurfaceView, swWin, swLayer),
+				getClass(useSurfaceView, swWin), 2, ArcRound, swWin, swLayer);
+
+		mUseSV = useSurfaceView;
         mType = "2d-fps";
         String [] _tmp = {
             "2d",
@@ -46,8 +41,16 @@ public class CaseDrawArc extends Case{
         mTags = _tmp;
     }
 
+    private static String getClass(boolean useSurfaceView, boolean swWin) {
+    	if (useSurfaceView)
+    		return "org.zeroxlab.graphics.DrawArc";
+    	if (swWin)
+    		return "org.zeroxlab.graphics.DrawArcSW";
+		return "org.zeroxlab.graphics.DrawArcHW";		
+    }
+    
     public String getTitle() {
-        return "Draw Arc";
+        return decorate("Draw Arc", mUseSV, mSwWin, mSwLayer);
     }
 
     public String getDescription() {

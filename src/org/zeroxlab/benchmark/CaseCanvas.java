@@ -14,97 +14,87 @@
  * limitations under the License.
  */
 
-package org.zeroxlab.zeroxbenchmark;
+package org.zeroxlab.benchmark;
 
-import android.util.Log;
-
-import android.os.SystemClock;
-
-import android.app.Activity;
-import android.content.Context;
-import android.content.BroadcastReceiver;
-import android.content.Intent;
-import android.os.Bundle;
-import android.widget.*;
-import android.view.*;
-import java.nio.*;
 import java.util.ArrayList;
 
-public class CaseCanvas extends Case{
+public class CaseCanvas extends Case {
 
-    public static int CanvasRound = 300;
+	public static int CanvasRound = 300;
 
-    CaseCanvas() {
-        super("CaseCanvas", TesterCanvas.getFullClassName(), 3, CanvasRound);
+	CaseCanvas() {
+		this(true, false, false);
+	}
 
-        mType = "2d-fps";
-        String [] _tmp = {
-            "2d",
-            "render",
-            "view",
-        };
-        mTags = _tmp;
+	CaseCanvas(boolean useSurfaceView, boolean swWin, boolean swLayer) {
+		super(decorate("CaseCanvas", useSurfaceView, swWin, swLayer),
+				swWin ? TesterCanvasSW.getFullClassName() : TesterCanvas
+						.getFullClassName(), 3, CanvasRound, swWin, swLayer);
 
-    }
+		mUseSV = useSurfaceView;
+		mType = "2d-fps";
+		String[] _tmp = { "2d", "render", "skia", "view", };
+		mTags = _tmp;
+	}
 
-    public String getTitle() {
-        return "Draw Canvas";
-    }
+	public String getTitle() {
+		return decorate("Draw Canvas", mUseSV, mSwWin, mSwLayer);
+	}
 
-    public String getDescription() {
-        return "call canvas.drawRGB to fill the canvas repeatedly. " +
-               "It redraw for " + CanvasRound + " times";
-    }
+	public String getDescription() {
+		return "call canvas.drawRGB to fill the canvas repeatedly. "
+				+ "It redraw for " + CanvasRound + " times";
+	}
 
-    @Override
-    public String getResultOutput() {
-        if (!couldFetchReport()) {
-            return "Cavas has no report";
-        }
+	@Override
+	public String getResultOutput() {
+		if (!couldFetchReport()) {
+			return "Cavas has no report";
+		}
 
-        String result = "";
-        float total = 0;
-        int length = mResult.length;
+		String result = "";
+		float total = 0;
+		int length = mResult.length;
 
-        for (int i = 0; i < length; i++) {
-            float second = (mResult[i] / 1000f);
-            float fps = (float)mCaseRound / second; // milliseconds to seconds
-            result += "Round " + i +" fps = " + fps + "\n";
-            total  += fps;
-        }
+		for (int i = 0; i < length; i++) {
+			float second = (mResult[i] / 1000f);
+			float fps = (float) mCaseRound / second; // milliseconds to seconds
+			result += "Round " + i + " fps = " + fps + "\n";
+			total += fps;
+		}
 
-        result += "Average: fps = " + ((float)total/length) + "\n";
-        return result;
-    }
+		result += "Average: fps = " + ((float) total / length) + "\n";
+		return result;
+	}
 
-    /*
-     *  Get Average Benchmark
-     */
-    public double getBenchmark(Scenario s) {
-        double total = 0;
-        int length = mResult.length;
-        for (int i = 0; i < length; i++) {
-            double second = (mResult[i] / 1000f);
-            double fps = (double)mCaseRound / second;
-            total  += fps;
-        }
-        return total / length;
-    }
+	/*
+	 * Get Average Benchmark
+	 */
+	public double getBenchmark(Scenario s) {
+		double total = 0;
+		int length = mResult.length;
+		for (int i = 0; i < length; i++) {
+			double second = (mResult[i] / 1000f);
+			double fps = (double) mCaseRound / second;
+			total += fps;
+		}
+		return total / length;
+	}
 
-    @Override
-    public ArrayList<Scenario> getScenarios () {
-        ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
+	@Override
+	public ArrayList<Scenario> getScenarios() {
+		ArrayList<Scenario> scenarios = new ArrayList<Scenario>();
 
-        Scenario s = new Scenario(getTitle(), mType, mTags);
-        s.mLog = getResultOutput();
-        for (int i = 0; i < mResult.length; i++) {
-            float second = (mResult[i] / 1000f);
-            float fps = (float)mCaseRound / second;
-            s.mResults.add(((Float)fps).doubleValue());
-        }
+		Scenario s = new Scenario(getTitle(), mType, mTags);
+		s.mLog = getResultOutput();
+		for (int i = 0; i < mResult.length; i++) {
+			float second = (mResult[i] / 1000f);
+			float fps = (float) mCaseRound / second;
+			s.mResults.add(((Float) fps).doubleValue());
+		}
 
-        scenarios.add(s);
-        return scenarios;
-    }
+		scenarios.add(s);
+		return scenarios;
+	}
 
 }

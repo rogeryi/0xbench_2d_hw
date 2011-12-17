@@ -19,7 +19,7 @@
 
 package org.opensolaris.hub.libmicro;
 
-import org.zeroxlab.zeroxbenchmark.*;
+import org.zeroxlab.benchmark.*;
 
 import android.os.Bundle;
 import android.content.Intent;
