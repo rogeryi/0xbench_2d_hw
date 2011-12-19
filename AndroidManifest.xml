@@ -38,6 +38,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="TesterCanvas2"
+            android:screenOrientation="nosensor" >
+            <intent-filter >
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </activity>
+        <activity
             android:hardwareAccelerated="false"
             android:name=".TesterCanvasSW"
             android:screenOrientation="nosensor" >

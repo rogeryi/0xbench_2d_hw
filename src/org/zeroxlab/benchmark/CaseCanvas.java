@@ -27,14 +27,21 @@ public class CaseCanvas extends Case {
 	}
 
 	CaseCanvas(boolean useSurfaceView, boolean swWin, boolean swLayer) {
-		super(decorate("CaseCanvas", useSurfaceView, swWin, swLayer),
-				swWin ? TesterCanvasSW.getFullClassName() : TesterCanvas
-						.getFullClassName(), 3, CanvasRound, swWin, swLayer);
+		super(decorate("CaseCanvas", useSurfaceView, swWin, swLayer), getClass(
+				useSurfaceView, swWin), 3, CanvasRound, swWin, swLayer);
 
 		mUseSV = useSurfaceView;
 		mType = "2d-fps";
 		String[] _tmp = { "2d", "render", "skia", "view", };
 		mTags = _tmp;
+	}
+
+	private static String getClass(boolean useSurfaceView, boolean swWin) {
+		if (useSurfaceView)
+			return TesterCanvas2.getFullClassName();
+		if (swWin)
+			return TesterCanvasSW.getFullClassName();
+		return TesterCanvas.getFullClassName();
 	}
 
 	public String getTitle() {

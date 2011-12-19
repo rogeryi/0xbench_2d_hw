@@ -16,17 +16,16 @@
 
 package org.zeroxlab.graphics;
 
-import org.zeroxlab.benchmark.Case;
+import org.zeroxlab.benchmark.Benchmark;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
@@ -41,7 +40,7 @@ class DrawImageView extends SurfaceView {
     private boolean direction[] = new boolean[ROW];
     private Bitmap mBitmap;
     private Paint bgPaint;
-
+    private Paint bmpPaint;
 
     protected void setImage(Bitmap bmp) {
         mBitmap = bmp;
@@ -53,11 +52,7 @@ class DrawImageView extends SurfaceView {
         mSurfaceHolder.unlockCanvasAndPost(canvas);
     }
 
-    private void drawImage(Canvas canvas) {
-    	Log.d("G", "Case " + Case.getSource(((Activity)getContext()).getIntent()) 
-    			+ ", canvas " + canvas.toString() + " HW Acc : " + canvas.isHardwareAccelerated()
-    			+ ", layer : " + getLayerType() + "(0:None, 1:SW, 2:HW)");
-    	
+    public void drawImage(Canvas canvas) {
         int w = getWidth();
         int h = getHeight();
         canvas.drawRect(0,0,w,h,bgPaint);
@@ -65,8 +60,11 @@ class DrawImageView extends SurfaceView {
         for(int x=0; x<ROW; x++) {
             int speed = (x+1) * 2;
             
-            for(int j=0; j<COL; j++)
-                canvas.drawBitmap(mBitmap, null, new RectF((w/(float)COL)*j, position[x], (w/(float)COL)*(j+1), position[x]+(w/(float)COL)), null);
+            for(int j=0; j<COL; j++) {
+            	RectF r = new RectF((w/(float)COL)*j, position[x], (w/(float)COL)*(j+1), position[x]+(w/(float)COL));
+            	Rect r2 = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
+                canvas.drawBitmap(mBitmap, r2, r, bmpPaint);
+            }
             if(direction[x]) {
                 position[x] += speed;
                 if (position[x] + (w/(float)COL) >= getHeight())
@@ -76,7 +74,6 @@ class DrawImageView extends SurfaceView {
                 if (position[x] <= 0)
                     direction[x] = !direction[x];
             }
-
         }
     }
 
@@ -86,6 +83,10 @@ class DrawImageView extends SurfaceView {
         bgPaint = new Paint();
         bgPaint.setColor(Color.BLACK);
         bgPaint.setStyle(Paint.Style.FILL);
+        
+        bmpPaint = new Paint();
+        if (Benchmark.sFilterBitmap)
+        	bmpPaint.setFilterBitmap(true);
 
         for(int i=0; i<ROW; i++) {
             position[i] = 0;

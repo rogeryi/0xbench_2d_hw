@@ -193,7 +193,6 @@ public abstract class Tester extends Activity {
                 sleep(mSleepingStart);
 
                 long start = SystemClock.uptimeMillis();
-
                 lazyLoop();
 
                 long end = SystemClock.uptimeMillis();

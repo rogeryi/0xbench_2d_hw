@@ -30,6 +30,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,6 +47,11 @@ import android.app.TabActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
+import android.graphics.Shader.TileMode;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -77,7 +83,11 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
 
     public final static String TAG     = "Benchmark";
     public final static String PACKAGE = "org.zeroxlab.benchmark";
-
+    
+    public static boolean sFilterBitmap = false;
+    public static boolean sUseGradient = false;
+    public static boolean sUseTexture = false;
+    
     private final static String mOutputFile = "0xBenchmark";
 
     private final static int GROUP_DEFAULT = 0;
@@ -92,11 +102,11 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
     private Button   mShow;
     private CheckBox mCheckList[];
     private TextView mDesc[];
-    private TextView mBannerInfo;
-
-    private ScrollView   mScrollView;
-    private LinearLayout mLinearLayout;
-    private LinearLayout mMainView;
+//    private TextView mBannerInfo;
+//
+//    private ScrollView   mScrollView;
+//    private LinearLayout mLinearLayout;
+//    private LinearLayout mMainView;
     private TabHost mTabHost;
 
     LinkedList<Case> mCases;
@@ -125,7 +135,11 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
     private CheckBox vmCheckBox;
     private CheckBox nativeCheckBox;
     private CheckBox miscCheckBox;
-
+    
+    private CheckBox filterBitmapCheckBox;
+    private CheckBox useGradientCheckBox;
+    private CheckBox useTextureCheckBox;
+    
     private HashMap< String, HashSet<Case> > mCategory = new HashMap< String, HashSet<Case> >();
 
     private final String trackerUrl = "http://0xbenchmark.appspot.com/static/MobileTracker.html";
@@ -138,6 +152,23 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
     boolean mCheckNative = false;
     boolean mCheckMisc = false;
     boolean mAutoUpload = false;
+    
+    private static BitmapShader sTexture;
+    
+    public static Shader createGradient() {
+    	Random random = new Random();
+        int color1 = (0x33252525 | random.nextInt()); 
+        int color2 = (0x33252525 | random.nextInt()); 
+        int color3 = (0x33252525 | random.nextInt()); 
+    	LinearGradient lg = new LinearGradient(0, 0, 100, 100, new int[] {
+    			color1, color2, color3},
+                null, Shader.TileMode.REPEAT);
+    	return lg;
+    }
+    
+    public static Shader createBitmapShader() {
+    	return sTexture; 
+    }
 
     @Override
     protected void onDestroy() {
@@ -152,7 +183,10 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
         mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG);
         mWakeLock.acquire();
-
+        sTexture = new BitmapShader(
+        		BitmapFactory.decodeResource(getResources(), R.drawable.crate),
+        		TileMode.REPEAT, TileMode.REPEAT);
+        
         setContentView(R.layout.main);
         mCases = new LinkedList<Case>();
         Case arith  = new CaseArithmetic();
@@ -166,6 +200,7 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         Case libMicro = new NativeCaseMicro();
         Case libUbench = new NativeCaseUbench();
 
+        Case canvas = new CaseCanvas(true, false, false);
         Case dc2 = new CaseDrawCircle2();
         Case dr = new CaseDrawRect();
         Case da = new CaseDrawArc();
@@ -191,21 +226,23 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         mCategory.get(MISC).add(javascript);
 
         // 2d
+        mCases.add(canvas);
         mCases.add(dc2);
         mCases.add(dr);
         mCases.add(da);
         mCases.add(di);
         mCases.add(dt);
-
+        
+        mCategory.get(D2).add(canvas);
         mCategory.get(D2).add(dc2);
         mCategory.get(D2).add(dr);
         mCategory.get(D2).add(da);
         mCategory.get(D2).add(di);
         mCategory.get(D2).add(dt);       
         
-        Case canvas = new CaseCanvas(false, false, false);//HW
-        Case canvas2 = new CaseCanvas(false, true, false);//SW Window
-        Case canvas3 = new CaseCanvas(false, false, true);//SW Layer
+        Case canvas2 = new CaseCanvas(false, false, false);//HW
+        Case canvas3 = new CaseCanvas(false, true, false);//SW Window
+        Case canvas4 = new CaseCanvas(false, false, true);//SW Layer
         Case circle = new CaseDrawCircle(false, false, false);//HW
         Case circle2 = new CaseDrawCircle(false, true, false);//SW Window
         Case circle3 = new CaseDrawCircle(false, false, true);//SW Layer
@@ -225,7 +262,7 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         Case dt3 = new CaseDrawText(false, true, false);//SW Window
         Case dt4 = new CaseDrawText(false, false, true);//SW Layer
         
-        mCases.add(canvas);
+        mCases.add(canvas2);
         mCases.add(circle);
         mCases.add(dc22);
         mCases.add(dr2);
@@ -233,7 +270,7 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         mCases.add(di2);
         mCases.add(dt2);
         
-        mCases.add(canvas2);
+        mCases.add(canvas3);
         mCases.add(circle2);
         mCases.add(dc23);
         mCases.add(dr3);
@@ -241,7 +278,7 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         mCases.add(di3);
         mCases.add(dt3);
         
-        mCases.add(canvas3);
+        mCases.add(canvas4);
         mCases.add(circle3);
         mCases.add(dc24);
         mCases.add(dr4);
@@ -250,7 +287,7 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         mCases.add(dt4);
         
         //2d(HW)
-        mCategory.get(D2HW).add(canvas);
+        mCategory.get(D2HW).add(canvas2);
         mCategory.get(D2HW).add(circle);
         mCategory.get(D2HW).add(dc22);
         mCategory.get(D2HW).add(da2);
@@ -259,7 +296,7 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         mCategory.get(D2HW).add(dt2);
         
         //2d(SW1)
-        mCategory.get(D2SW1).add(canvas2);
+        mCategory.get(D2SW1).add(canvas3);
         mCategory.get(D2SW1).add(circle2);
         mCategory.get(D2SW1).add(dc23);
         mCategory.get(D2SW1).add(da3);
@@ -268,7 +305,7 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
         mCategory.get(D2SW1).add(dt3);
         
         //2d(SW2)
-        mCategory.get(D2SW2).add(canvas3);
+        mCategory.get(D2SW2).add(canvas4);
         mCategory.get(D2SW2).add(circle3);
         mCategory.get(D2SW2).add(dc24);
         mCategory.get(D2SW2).add(da4);
@@ -351,7 +388,7 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        MenuItem item1 = menu.add(GROUP_DEFAULT, SETTINGS_ID, Menu.NONE, R.string.menu_settings);
+        //MenuItem item1 = menu.add(GROUP_DEFAULT, SETTINGS_ID, Menu.NONE, R.string.menu_settings);
         return true;
     }
 
@@ -540,6 +577,18 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
                     miscCheckBox.setText(MISC);
                     miscCheckBox.setOnClickListener(Benchmark.this);
 
+                    filterBitmapCheckBox = new CheckBox(Benchmark.this);
+                    filterBitmapCheckBox.setText("Filter Bitmap in Draw Image");
+                    filterBitmapCheckBox.setOnClickListener(Benchmark.this);
+                    
+                    useGradientCheckBox = new CheckBox(Benchmark.this);
+                    useGradientCheckBox.setText("Use Gradient in Draw Canvas/Circle/Rect/Arc");
+                    useGradientCheckBox.setOnClickListener(Benchmark.this);
+                    
+                    useTextureCheckBox = new CheckBox(Benchmark.this);
+                    useTextureCheckBox.setText("Use Texture in Draw Canvas/Circle/Rect/Arc");
+                    useTextureCheckBox.setOnClickListener(Benchmark.this);
+                    
                     TextView mWebInfo = new TextView(Benchmark.this);
                     mWebInfo.setText("Uploaded results:\nhttp://0xbenchmark.appspot.com");
 
@@ -575,6 +624,9 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
                     mMainViewContainer.addView(vmCheckBox);
                     mMainViewContainer.addView(nativeCheckBox);
                     mMainViewContainer.addView(miscCheckBox);
+                    mMainViewContainer.addView(filterBitmapCheckBox);
+                    mMainViewContainer.addView(useGradientCheckBox);
+                    mMainViewContainer.addView(useTextureCheckBox);
                     mMainViewContainer.addView(mWebInfo);
                     mMainViewContainer.addView(mButtonContainer, fillWrap);
                     mMainViewContainer.addView(mTracker, 0,0);
@@ -663,6 +715,12 @@ public class Benchmark extends TabActivity implements View.OnClickListener {
                     continue;
                 mCheckList[i].setChecked(((CheckBox)v).isChecked());
             }
+        } else if (v == filterBitmapCheckBox) {
+        	sFilterBitmap = filterBitmapCheckBox.isChecked();
+        } else if (v == useGradientCheckBox) {
+        	sUseGradient = useGradientCheckBox.isChecked();
+        } else if (v == useTextureCheckBox) {
+        	sUseTexture = useTextureCheckBox.isChecked();
         }
     }
 

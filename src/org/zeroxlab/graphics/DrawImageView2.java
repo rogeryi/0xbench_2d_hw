@@ -16,6 +16,8 @@
 
 package org.zeroxlab.graphics;
 
+import org.zeroxlab.benchmark.Benchmark;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -34,6 +36,7 @@ class DrawImageView2 extends BaseDrawView {
     private boolean direction[] = new boolean[ROW];
     private Bitmap mBitmap;
     private Paint bgPaint;
+    private Paint bmpPaint;
 
     protected void setImage(Bitmap bmp) {
         mBitmap = bmp;
@@ -50,7 +53,7 @@ class DrawImageView2 extends BaseDrawView {
             for(int j=0; j<COL; j++) {
             	RectF r = new RectF((w/(float)COL)*j, position[x], (w/(float)COL)*(j+1), position[x]+(w/(float)COL));
             	Rect r2 = new Rect(0, 0, mBitmap.getWidth(), mBitmap.getHeight());
-                canvas.drawBitmap(mBitmap, r2, r, null);
+                canvas.drawBitmap(mBitmap, r2, r, bmpPaint);
             }
             if(direction[x]) {
                 position[x] += speed;
@@ -70,7 +73,11 @@ class DrawImageView2 extends BaseDrawView {
         bgPaint = new Paint();
         bgPaint.setColor(Color.BLACK);
         bgPaint.setStyle(Paint.Style.FILL);
-
+        
+        bmpPaint = new Paint();
+        if (Benchmark.sFilterBitmap)
+        	bmpPaint.setFilterBitmap(true);
+        
         for(int i=0; i<ROW; i++) {
             position[i] = 0;
             direction[i] = true;

@@ -19,6 +19,8 @@ package org.zeroxlab.graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.zeroxlab.benchmark.Benchmark;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -46,7 +48,12 @@ class DrawRectView2 extends BaseDrawView {
             Paint p = new Paint();
             p.setAntiAlias(false);
             p.setStyle(Paint.Style.FILL);
-            p.setColor(cr.mColor);
+            if (Benchmark.sUseTexture)
+            	p.setShader(Benchmark.createBitmapShader());
+            else if (Benchmark.sUseGradient)
+            	p.setShader(Benchmark.createGradient());
+            else
+            	p.setColor(cr.mColor);
 
             canvas.drawRect(cr.mRect, p);
         }

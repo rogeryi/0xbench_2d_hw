@@ -18,6 +18,8 @@ package org.zeroxlab.graphics;
 
 import java.util.Random;
 
+import org.zeroxlab.benchmark.Benchmark;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -38,8 +40,13 @@ class DrawArcView2 extends BaseDrawView {
         Paint p = new Paint();
         p.setAntiAlias(false);
         p.setStyle(Paint.Style.FILL);
-        p.setColor(color);
-
+        if (Benchmark.sUseTexture)
+        	p.setShader(Benchmark.createBitmapShader());
+        else if (Benchmark.sUseGradient)
+        	p.setShader(Benchmark.createGradient());
+        else
+        	p.setColor(color);
+        
         canvas.drawArc(new RectF(0,0, getWidth(), getHeight()), 0, angle, true, p);
 
         for(int j=0; j<3; j++) for(int x=0; x<4; x++) for(int y=0; y<4; y++) {
@@ -47,7 +54,12 @@ class DrawArcView2 extends BaseDrawView {
             p = new Paint();
             p.setAntiAlias(false);
             p.setStyle(Paint.Style.FILL);
-            p.setColor(color);
+            if (Benchmark.sUseTexture)
+            	p.setShader(Benchmark.createBitmapShader());
+            else if (Benchmark.sUseGradient)
+            	p.setShader(Benchmark.createGradient());
+            else
+            	p.setColor(color);
 
             if(x%2==0)
                 canvas.drawArc(new RectF( x*getWidth()/4, y*getHeight()/4, (1+x)*getWidth()/4, (1+y)*getHeight()/4), 0, angle, (x+y)%2 == 0, p);

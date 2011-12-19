@@ -18,20 +18,20 @@ package org.zeroxlab.benchmark;
 
 import java.util.Random;
 
-import org.zeroxlab.graphics.BaseDrawView;
-
-import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.SurfaceHolder;
 
-public class TesterCanvas extends Tester {
-    public final String TAG = "TesterCanvas";
+public class TesterCanvas2 extends Tester implements SurfaceHolder.Callback2 {
+    public final String TAG = "TesterCanvas2";
     public final static String PACKAGE = "org.zeroxlab.benchmark";
-    MyView mView;
-    Paint mPaint;
-
+    private Random mRandom;
+    private Paint mPaint;
+    private SurfaceHolder mSurfaceHolder;
+    
     public String getTag() {
         return TAG;
     }
@@ -41,7 +41,7 @@ public class TesterCanvas extends Tester {
     }
 
     public static String getFullClassName() {
-        return getPackage() + ".TesterCanvas";
+        return getPackage() + ".TesterCanvas2";
     }
 
     public int sleepBetweenRound() {
@@ -52,14 +52,28 @@ public class TesterCanvas extends Tester {
     }
 
     public void oneRound() {
-        mView.doDraw();
+    	if (mSurfaceHolder == null)
+    		return;
+    	
+		Canvas canvas = mSurfaceHolder.lockCanvas();
+    	Log.d("G", "Case " + Case.getSource(getIntent()) 
+    			+ ", canvas " + canvas.toString() + " HW Acc : " + canvas.isHardwareAccelerated()
+    			+ ", thread: " + Thread.currentThread().toString());
+    	
+        int r = (0x00151515| mRandom.nextInt() ) | Color.BLACK;
+        if (Benchmark.sUseTexture || Benchmark.sUseGradient)
+        	canvas.drawPaint(mPaint);
+        else
+        	canvas.drawRGB(r, r, r);	
+        
+        mSurfaceHolder.unlockCanvasAndPost(canvas);
         decreaseCounter();
     }
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        mView = new MyView(this);
-        setContentView(mView);
+        mRandom = new Random();
+        getWindow().takeSurface(this);        
         mPaint = new Paint();
         if (Benchmark.sUseTexture)
         	mPaint.setShader(Benchmark.createBitmapShader());
@@ -69,21 +83,23 @@ public class TesterCanvas extends Tester {
         startTester();
     }
 
-    public class MyView extends BaseDrawView {
-        Random mRandom;
+	@Override
+	public void surfaceChanged(SurfaceHolder holder, int format, int width,
+			int height) {
+		
+	}
 
-        MyView(Context context) {
-            super(context);
-            mRandom = new Random();
-        }
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		mSurfaceHolder = holder;
+	}
 
-		@Override
-		public void drawScene(Canvas canvas) {
-            int r = (0x00151515| mRandom.nextInt() ) | Color.BLACK;
-            if (Benchmark.sUseTexture || Benchmark.sUseGradient)
-            	canvas.drawPaint(mPaint);
-            else
-            	canvas.drawRGB(r, r, r);			
-		}
-    }
+	@Override
+	public void surfaceDestroyed(SurfaceHolder holder) {
+		mSurfaceHolder = null;
+	}
+
+	@Override
+	public void surfaceRedrawNeeded(SurfaceHolder holder) {
+	}
 }

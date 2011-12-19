@@ -18,6 +18,8 @@ package org.zeroxlab.graphics;
 
 import java.util.Random;
 
+import org.zeroxlab.benchmark.Benchmark;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -47,7 +49,12 @@ class DrawCircle2View2 extends BaseDrawView {
             p = new Paint();
             p.setAntiAlias(true);
             p.setStyle(Paint.Style.FILL);
-            p.setColor(color);
+            if (Benchmark.sUseTexture)
+            	p.setShader(Benchmark.createBitmapShader());
+            else if (Benchmark.sUseGradient)
+            	p.setShader(Benchmark.createGradient());
+            else
+            	p.setColor(color);
             canvas.drawCircle(cx, cy, (int)(r*(1 + i/10.0)), p);
         }		
 	}
